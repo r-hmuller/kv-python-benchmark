@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for i in range(int(arguments[0])):
         process = multiprocessing.Process(
             target=benchmark.execute,
-            args=(int(arguments[1]), arguments[2], arguments[3])
+            args=(int(arguments[1]), arguments[2], arguments[3], True if i == 0 else False)
         )
         jobs.append(process)
 
