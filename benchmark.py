@@ -1,6 +1,5 @@
 import datetime
-import random
-from random import choice
+from random import choice, randint
 from string import ascii_lowercase
 import time
 
@@ -20,15 +19,15 @@ def execute(time, url, file_to_save, main_thread):
     while datetime.datetime.now() < endTime:
         selected_key = randint(0, 1_000_000)
         new_value = "".join(choice(ascii_lowercase) for i in range(1024))
-        if random.randint(0, 50) == 22:
+        if randint(0, 50) == 22:
             start_time = time.time()
-            r = requests.post(url=url, data={'key': selected_key,
+            requests.post(url=url, data={'key': selected_key,
                                              'value': new_value})
             end_time = time.time()
             latency = end_time - start_time
             latencies[start_time] = latency
         else:
-            r = requests.post(url=url, data={'key': selected_key,
+            requests.post(url=url, data={'key': selected_key,
                                              'value': new_value})
         time.sleep(0.2)
 
