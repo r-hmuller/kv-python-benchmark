@@ -18,16 +18,18 @@ def execute(time, url, file_to_save, main_thread):
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time)
     latencies = {}
     while datetime.datetime.now() < endTime:
+        selected_key = randint(0, 1_000_000)
+        new_value = "".join(choice(ascii_lowercase) for i in range(1024))
         if random.randint(0, 50) == 22:
             start_time = time.time()
-            r = requests.post(url=f"{url}/", data={'key': "".join(choice(ascii_lowercase) for i in range(18)),
-                                             'value': "".join(choice(ascii_lowercase) for i in range(50))})
+            r = requests.post(url=url, data={'key': selected_key,
+                                             'value': new_value})
             end_time = time.time()
             latency = end_time - start_time
             latencies[start_time] = latency
         else:
-            r = requests.post(url=url, data={'key': "".join(choice(ascii_lowercase) for i in range(18)),
-                                             'value': "".join(choice(ascii_lowercase) for i in range(50))})
+            r = requests.post(url=url, data={'key': selected_key,
+                                             'value': new_value})
         time.sleep(0.2)
 
     if main_thread is True:
