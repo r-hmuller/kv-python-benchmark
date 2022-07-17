@@ -1,4 +1,5 @@
 import datetime
+import sys
 from random import choice, randint
 from string import ascii_lowercase
 import time
@@ -9,14 +10,15 @@ import requests
 # Time in seconds
 # Path of the file to save the results
 # The URL to send POST commands
-def execute(time_to_run, url, file_to_save, main_thread, main_client):
+def execute(time_to_run, url, file_to_save, main_thread, main_client, should_seed):
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
     if main_thread is True and main_client is True:
-        print("Running seed")
-        r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
-        print(f"Status: {r.status_code}")
+        if should_seed:
+            print("Running seed")
+            r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
+            print(f"Status: {r.status_code}")
         requests.post(url=f"{url}/testing", data={'action': 'start'})
         latencies = {}
         while datetime.datetime.now() < endTime:
@@ -32,7 +34,8 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client):
                                              'value': new_value})
             time.sleep(0.2)
 
-        requests.post(url=f"{url}/testing", data={'action': 'stop'})
+        arguments = sys.argv[1:]
+        requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/users/Hmuller/logs/{arguments[1]}_clients_{arguments[0]}_threads.log"})
 
         with open(file_to_save, 'a') as f:
             for key, value in latencies.items():
