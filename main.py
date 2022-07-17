@@ -9,13 +9,14 @@ if __name__ == '__main__':
     #2 Seconds to run
     #3 URL
     #4 File to write
+    #5 main client
     arguments = sys.argv[1:]
     jobs = []
 
     for i in range(int(arguments[0])):
         process = multiprocessing.Process(
             target=benchmark.execute,
-            args=(int(arguments[1]), arguments[2], arguments[3], True if i == 0 else False)
+            args=(int(arguments[1]), arguments[2], arguments[3], True if i == 0 else False, arguments[4] == 'True')
         )
         jobs.append(process)
 

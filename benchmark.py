@@ -8,13 +8,13 @@ import requests
 # Time in seconds
 # Path of the file to save the results
 # The URL to send POST commands
-def execute(time, url, file_to_save, main_thread):
+def execute(time, url, file_to_save, main_thread, main_client):
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
-    if main_thread is True:
+    endTime = datetime.datetime.now() + datetime.timedelta(seconds=time)
+    if main_thread is True and main_client is True:
         requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
         requests.post(url=f"{url}/testing", data={'action': 'start'})
-        endTime = datetime.datetime.now() + datetime.timedelta(seconds=time)
         latencies = {}
         while datetime.datetime.now() < endTime:
             if randint(0, 50) == 22:
@@ -35,7 +35,8 @@ def execute(time, url, file_to_save, main_thread):
             for key, value in latencies.items():
                 f.write('%s,%s\n' % (key, value))
     else:
-        requests.post(url=url, data={'key': selected_key,
+        while datetime.datetime.now() < endTime:
+            requests.post(url=url, data={'key': selected_key,
                                      'value': new_value})
-        time.sleep(0.2)
+            time.sleep(0.2)
 
