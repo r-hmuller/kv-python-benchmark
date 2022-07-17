@@ -19,6 +19,7 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
             print("Running seed")
             r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
             print(f"Status: {r.status_code}")
+            r.close()
         print("Starting test")
         r = requests.post(url=f"{url}/testing", data={'action': 'start'})
         print(f"Status: {r.status_code}")
@@ -26,14 +27,16 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
         while datetime.datetime.now() < endTime:
             if randint(0, 50) == 22:
                 start_time = time.time()
-                requests.post(url=url, data={'key': selected_key,
+                r = requests.post(url=url, data={'key': selected_key,
                                              'value': new_value})
+                r.close()
                 end_time = time.time()
                 latency = end_time - start_time
                 latencies[start_time] = latency
             else:
-                requests.post(url=url, data={'key': selected_key,
+                r = requests.post(url=url, data={'key': selected_key,
                                              'value': new_value})
+                r.close()
             time.sleep(0.2)
 
         arguments = sys.argv[1:]
@@ -43,6 +46,7 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
         if r.status_code != 204:
             print(r.content)
 
+        r.close()
         with open(file_to_save, 'a') as f:
             for key, value in latencies.items():
                 f.write('%s,%s\n' % (key, value))
