@@ -19,7 +19,9 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
             print("Running seed")
             r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
             print(f"Status: {r.status_code}")
-        requests.post(url=f"{url}/testing", data={'action': 'start'})
+        print("Starting test")
+        r = requests.post(url=f"{url}/testing", data={'action': 'start'})
+        print(f"Status: {r.status_code}")
         latencies = {}
         while datetime.datetime.now() < endTime:
             if randint(0, 50) == 22:
@@ -35,7 +37,9 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
             time.sleep(0.2)
 
         arguments = sys.argv[1:]
-        requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/users/Hmuller/logs/{arguments[1]}_clients_{arguments[0]}_threads.log"})
+        print("Finishing test")
+        r = requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/users/Hmuller/logs/{arguments[1]}_clients_{arguments[0]}_threads.log"})
+        print(f"Status: {r.status_code}")
 
         with open(file_to_save, 'a') as f:
             for key, value in latencies.items():
