@@ -38,7 +38,7 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
 
         arguments = sys.argv[1:]
         print("Finishing test")
-        r = requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/users/Hmuller/logs/{arguments[1]}_clients_{arguments[0]}_threads.log"})
+        r = requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log"})
         print(f"Status: {r.status_code}")
         if r.status_code != 204:
             print(r.content)
