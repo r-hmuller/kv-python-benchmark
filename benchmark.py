@@ -52,6 +52,7 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
                 f.write('%s,%s\n' % (key, value))
     else:
         while datetime.datetime.now() < endTime:
-            requests.post(url=url, data={'key': selected_key,
+            r = requests.post(url=url, data={'key': selected_key,
                                          'value': new_value})
+            r.close()
             time.sleep(0.2)
