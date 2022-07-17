@@ -12,7 +12,7 @@ import requests
 def execute(time_to_run, url, file_to_save, main_thread, main_client):
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
-    endTime = datetime.datetime.now() + datetime.timedelta(time=time_to_run)
+    endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
     if main_thread is True and main_client is True:
         requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
         requests.post(url=f"{url}/testing", data={'action': 'start'})
