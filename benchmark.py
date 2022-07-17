@@ -14,7 +14,9 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client):
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
     if main_thread is True and main_client is True:
-        requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
+        print("Running seed")
+        r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
+        print(f"Status: {r.status_code}")
         requests.post(url=f"{url}/testing", data={'action': 'start'})
         latencies = {}
         while datetime.datetime.now() < endTime:
