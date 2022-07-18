@@ -2,6 +2,8 @@
 import multiprocessing
 import sys
 
+import requests
+
 import benchmark
 
 if __name__ == '__main__':
@@ -15,6 +17,11 @@ if __name__ == '__main__':
 
     arguments = sys.argv[1:]
     jobs = []
+
+    if arguments[6] == 'True':
+        print("Running seed")
+        r = requests.post(url=f"{arguments[3]}/seed", data={'quantity': 1_000_000, 'size': 1024})
+        print(f"Status: {r.status_code}")
 
     for i in range(int(arguments[0])):
         process = multiprocessing.Process(

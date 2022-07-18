@@ -16,10 +16,6 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
     session = requests.Session()
     if main_thread is True and main_client is True:
-        if should_seed:
-            print("Running seed")
-            r = session.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
-            print(f"Status: {r.status_code}")
         print("Starting test")
         r = session.post(url=f"{url}/testing", data={'action': 'start'})
         print(f"Status: {r.status_code}")
