@@ -14,34 +14,32 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
+    session = requests.Session()
     if main_thread is True and main_client is True:
         if should_seed:
             print("Running seed")
-            r = requests.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
+            r = session.post(url=f"{url}/seed", data={'quantity': 1_000_000, 'size': 1024})
             print(f"Status: {r.status_code}")
-            r.close()
         print("Starting test")
-        r = requests.post(url=f"{url}/testing", data={'action': 'start'})
+        r = session.post(url=f"{url}/testing", data={'action': 'start'})
         print(f"Status: {r.status_code}")
         latencies = {}
         while datetime.datetime.now() < endTime:
             if randint(0, 50) == 22:
                 start_time = time.time()
-                r = requests.post(url=url, data={'key': selected_key,
+                r = session.post(url=url, data={'key': selected_key,
                                              'value': new_value})
-                r.close()
                 end_time = time.time()
                 latency = end_time - start_time
                 latencies[start_time] = latency
             else:
-                r = requests.post(url=url, data={'key': selected_key,
+                r = session.post(url=url, data={'key': selected_key,
                                              'value': new_value})
-                r.close()
             time.sleep(0.2)
 
         arguments = sys.argv[1:]
         print("Finishing test")
-        r = requests.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log"})
+        r = session.post(url=f"{url}/testing", data={'action': 'stop', 'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log"})
         print(f"Status: {r.status_code}")
         if r.status_code != 204:
             print(r.content)
@@ -52,7 +50,6 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, should_see
                 f.write('%s,%s\n' % (key, value))
     else:
         while datetime.datetime.now() < endTime:
-            r = requests.post(url=url, data={'key': selected_key,
+            r = session.post(url=url, data={'key': selected_key,
                                          'value': new_value})
-            r.close()
             time.sleep(0.2)
