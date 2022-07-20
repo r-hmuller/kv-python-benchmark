@@ -14,7 +14,7 @@ if __name__ == '__main__':
     #5 File to write
     #6 main client
     #7 Should populate database
-
+    #8 Debug response
     arguments = sys.argv[1:]
     jobs = []
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     for i in range(int(arguments[0])):
         process = multiprocessing.Process(
             target=benchmark.execute,
-            args=(int(arguments[2]), arguments[3], arguments[4], True if i == 0 else False, arguments[5] == 'True', arguments[6] == 'True')
+            args=(int(arguments[2]), arguments[3], arguments[4], True if i == 0 else False, arguments[5] == 'True', arguments[7] == 'True')
         )
         jobs.append(process)
 
