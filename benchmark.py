@@ -10,7 +10,7 @@ import requests
 # Time in seconds
 # Path of the file to save the results
 # The URL to send POST commands
-def execute(time_to_run, url, file_to_save, main_thread, main_client):
+def execute(time_to_run, url, file_to_save, main_thread, main_client, debug):
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
@@ -25,9 +25,10 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client):
                 start_time = time.time()
                 r = session.post(url=url, data={'key': selected_key,
                                              'value': new_value})
-                print("Debugging request")
-                print(r.status_code)
-                print(r.content)
+                if debug is True:
+                    print("Debugging request")
+                    print(r.status_code)
+                    print(r.content)
                 end_time = time.time()
                 latency = end_time - start_time
                 latencies[start_time] = latency
