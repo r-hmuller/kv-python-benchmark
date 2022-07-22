@@ -10,7 +10,7 @@ import requests
 # Time in seconds
 # Path of the file to save the results
 # The URL to send POST commands
-def execute(time_to_run, url, file_to_save, main_thread, main_client, debug):
+def execute(time_to_run, url, file_to_save, main_thread, main_client, debug, thinking_time):
     selected_key = randint(0, 1_000_000)
     new_value = "".join(choice(ascii_lowercase) for i in range(1024))
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
@@ -35,7 +35,7 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, debug):
             else:
                 r = session.post(url=url, data={'key': selected_key,
                                              'value': new_value})
-            time.sleep(0.2)
+            time.sleep(thinking_time)
 
         arguments = sys.argv[1:]
         print("Finishing test")
@@ -52,4 +52,4 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, debug):
         while datetime.datetime.now() < endTime:
             r = session.post(url=url, data={'key': selected_key,
                                          'value': new_value})
-            time.sleep(0.2)
+            time.sleep(thinking_time)
