@@ -36,7 +36,9 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, debug, thi
             print("Finishing test")
             r = session.post(url=f"{url}/testing",
                              data={'action': 'stop',
-                                   'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log"})
+                                   'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log",
+                                   'dumpMemory': f"/data/{arguments[1]}_clients_{arguments[0]}_threads_dumpmemory.log"
+                                   })
             print(f"Status: {r.status_code}")
             if r.status_code != 204:
                 print(r.content)
