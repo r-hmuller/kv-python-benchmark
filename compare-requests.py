@@ -15,6 +15,6 @@ with open(file_name, 'r') as file:
 
         response = session.get(url=f"{url}?key={key}")
         if response.text != value:
-            print(f"Key: {key} Value: {value} Response: {response.text}")
+            print(f"Key: {key} is different")
 
 print("Done")
