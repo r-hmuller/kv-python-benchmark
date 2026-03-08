@@ -21,7 +21,8 @@ def execute(time_to_run, url, file_to_save, main_thread, main_client, debug, thi
 async def _execute_async(time_to_run, url, file_to_save, main_thread, main_client, debug, thinking_time,
                          store_to_file, read_from_file, requests_file):
     endTime = datetime.datetime.now() + datetime.timedelta(seconds=time_to_run)
-    async with aiohttp.ClientSession() as session:
+    timeout = aiohttp.ClientTimeout(total=240)
+    async with aiohttp.ClientSession(timeout=timeout) as session:
         if read_from_file is False:
             if main_thread is True and main_client is True:
                 print("Starting test")
@@ -66,7 +67,7 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
 
                 with open(file_to_save, 'a') as f:
                     f.write('--- Status Counts ---\n')
-                    for status, count in sorted(status_counts.items()):
+                    for status, count in sorted(status_counts.items(), key=lambda x: str(x[0])):
                         f.write('%s,%s\n' % (status, count))
                     f.write('--- Latencies ---\n')
                     for key, value in latencies.items():
