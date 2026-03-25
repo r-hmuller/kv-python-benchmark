@@ -7,6 +7,7 @@ from string import ascii_lowercase
 import time
 
 import aiohttp
+import requests as requests_sync
 
 
 # Time in seconds
@@ -26,8 +27,8 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
         if read_from_file is False:
             if main_thread is True and main_client is True:
                 print("Starting test")
-                async with session.post(url=f"{url}/testing", data={'action': 'start'}) as r:
-                    print(f"Status: {r.status}")
+                r = requests_sync.post(url=f"{url}/testing", data={'action': 'start'})
+                print(f"Status: {r.status_code}")
                 latencies = {}
                 status_counts = defaultdict(int)
                 pending_tasks = []
@@ -56,14 +57,14 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
 
                 arguments = sys.argv[1:]
                 print("Finishing test")
-                async with session.post(url=f"{url}/testing",
-                                        data={'action': 'stop',
-                                              'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log",
-                                              'dumpMemory': f"/data/{arguments[1]}_clients_{arguments[0]}_threads_dumpmemory.log"
-                                              }) as r:
-                    print(f"Status: {r.status}")
-                    if r.status != 204:
-                        print(await r.read())
+                r = requests_sync.post(url=f"{url}/testing",
+                                       data={'action': 'stop',
+                                             'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log",
+                                             'dumpMemory': f"/data/{arguments[1]}_clients_{arguments[0]}_threads_dumpmemory.log"
+                                             })
+                print(f"Status: {r.status_code}")
+                if r.status_code != 204:
+                    print(r.content)
 
                 with open(file_to_save, 'a') as f:
                     f.write('--- Status Counts ---\n')
@@ -111,6 +112,7 @@ async def generate_requests_main_thread(session, url, key, value, debug, latenci
         latencies[start_time] = latency
     except Exception as e:
         status_counts["error"] += 1
+        print(f"Request error: {e}")
 
 
 async def generate_requests_secondaries_threads(session, url, key, value, status_counts):
