@@ -27,7 +27,7 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
         if read_from_file is False:
             if main_thread is True and main_client is True:
                 print("Starting test")
-                r = requests_sync.post(url=f"{url}/testing", data={'action': 'start'})
+                r = requests_sync.post(url=f"{url}/testing", json={'action': 'start'})
                 print(f"Status: {r.status_code}")
                 latencies = {}
                 status_counts = defaultdict(int)
@@ -58,9 +58,8 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
                 arguments = sys.argv[1:]
                 print("Finishing test")
                 r = requests_sync.post(url=f"{url}/testing",
-                                       data={'action': 'stop',
-                                             'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log",
-                                             'dumpMemory': f"/data/{arguments[1]}_clients_{arguments[0]}_threads_dumpmemory.log"
+                                       json={'action': 'stop',
+                                             'path': f"/data/{arguments[1]}_clients_{arguments[0]}_threads.log"
                                              })
                 print(f"Status: {r.status_code}")
                 if r.status_code != 204:
