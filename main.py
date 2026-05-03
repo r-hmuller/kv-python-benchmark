@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     if arguments[6] == 'True':
         print("Running seed")
-        r = requests.post(url=f"{arguments[3]}/seed", data={'quantity': 1_000_000, 'size': 1024})
+        r = requests.post(url=f"{arguments[3]}/seed", data={'quantity': 100_000, 'size': 1024})
         print(f"Status: {r.status_code}")
 
     for i in range(int(arguments[0])):
