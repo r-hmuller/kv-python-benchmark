@@ -87,7 +87,12 @@ async def _execute_async(time_to_run, url, file_to_save, main_thread, main_clien
                 f.write('%s,%s\n' % (status, count))
             f.write('--- Latencies ---\n')
             for key, value in latencies.items():
-                f.write('%s,%s\n' % (key, value))
+                # (latência, status): permite filtrar 204 vs erros nos plots de
+                # timeline. Consumidores antigos leem só os 2 primeiros campos.
+                if isinstance(value, tuple):
+                    f.write('%s,%s,%s\n' % (key, value[0], value[1]))
+                else:
+                    f.write('%s,%s\n' % (key, value))
 
 
 async def _fire_one(session, url, key, value, debug, latencies, status_counts):
@@ -101,7 +106,7 @@ async def _fire_one(session, url, key, value, debug, latencies, status_counts):
                 print(r.status)
                 print(await r.read())
         end_time = time.time()
-        latencies[start_time] = end_time - start_time
+        latencies[start_time] = (end_time - start_time, r.status)
     except Exception as e:
         status_counts["error"] += 1
         if debug:
